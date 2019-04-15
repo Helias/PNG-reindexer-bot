@@ -71,14 +71,7 @@ def indexing(bot, update):
     new_palette, new_pixels_idx = convert_palette(best_path_vec, metadata["palette"], pixels_idx)
     write_image("img2.png", new_pixels_idx, new_palette)
 
-    img = Image.open("img2.png")
-    img = img.convert("RGB")
-    bio = BytesIO()
-    bio.name = 'indexed.png'
-    img.save(bio, 'PNG')
-    bio.seek(0)
-    bot.sendPhoto(update.message.chat_id, photo=bio, caption="Done!")
-
+    bot.send_document(chat_id=update.message.chat_id, document=open('img2.png', 'rb'), caption="Done!")
 
 def main():
   updater = Updater(TOKEN)
