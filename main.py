@@ -52,11 +52,11 @@ def indexing(bot, update):
         source = png.Reader(img_name)
         width, height, pixels, metadata = source.read()
 
-        if "palette" not in metadata:
-            pixs, _palette = generate_palette_indexed_pixels(img_name)
-            write_image("img_1.png", pixs, _palette)
-            source = png.Reader("img_1.png")
-            width, height, pixels, metadata = source.read()
+        # if "palette" not in metadata:
+        pixs, _palette = generate_palette_indexed_pixels(img_name)
+        write_image("img_1.png", pixs, _palette)
+        source = png.Reader("img_1.png")
+        width, height, pixels, metadata = source.read()
 
     # converting pixels hex bytearray into integer
     pixels_idx = []
@@ -71,7 +71,8 @@ def indexing(bot, update):
     new_palette, new_pixels_idx = convert_palette(best_path_vec, metadata["palette"], pixels_idx)
     write_image("img2.png", new_pixels_idx, new_palette)
 
-    bot.send_document(chat_id=update.message.chat_id, document=open('img2.png', 'rb'), caption="Done!")
+    bot.send_document(chat_id=update.message.chat_id, document=open('img_1.png', 'rb'), caption="Old image converted to PNG with palette")
+    bot.send_document(chat_id=update.message.chat_id, document=open('img2.png', 'rb'), caption="Image reindexed")
 
 def main():
   updater = Updater(TOKEN)
