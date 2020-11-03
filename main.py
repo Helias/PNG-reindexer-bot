@@ -17,14 +17,14 @@ TOKEN = open("config/token.conf", "r").read().strip()
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-def start(bot, update):
+def start(update, context):
   update.message.reply_text('Hi! Send me an image as file and I will make an indexed PNG file with a ordered palette!')
 
-def indexing(bot, update):
+def indexing(update, context):
 
     if not update.message.photo and update.message.document:
         if "image" in update.message.document.mime_type:
-            file = bot.getFile(update.message.document.file_id)
+            file = context.bot.getFile(update.message.document.file_id)
             file.download(update.message.document.file_name)
             img_name=update.message.document.file_name
             update.message.reply_text('Processing...'+img_name)
@@ -37,8 +37,8 @@ def indexing(bot, update):
             update.message.reply_text('Send me an image as file and I will make an indexed PNG file with a ordered palette')
             return
 
-        pic = bot.getFile(id_img)
-        new_file = bot.get_file(pic.file_id)
+        pic = context.bot.getFile(id_img)
+        new_file = context.bot.get_file(pic.file_id)
         new_file.download('picture.jpg')
         img_name = "picture.jpg"
         update.message.reply_text('Processing...')
@@ -71,8 +71,8 @@ def indexing(bot, update):
     new_palette, new_pixels_idx = convert_palette(best_path_vec, metadata["palette"], pixels_idx)
     write_image("img2.png", new_pixels_idx, new_palette)
 
-    bot.send_document(chat_id=update.message.chat_id, document=open('img_1.png', 'rb'), caption="Old image converted to PNG with palette")
-    bot.send_document(chat_id=update.message.chat_id, document=open('img2.png', 'rb'), caption="Image reindexed")
+    context.bot.send_document(chat_id=update.message.chat_id, document=open('img_1.png', 'rb'), caption="Old image converted to PNG with palette")
+    context.bot.send_document(chat_id=update.message.chat_id, document=open('img2.png', 'rb'), caption="Image reindexed")
 
 def main():
   updater = Updater(TOKEN)
